@@ -23,6 +23,7 @@ add_executable("App" ${AllFile})
 target_include_directories("App" PUBLIC 
 	${PROJECT_COMPONENT_DIR}/
 	${PROJECT_LIBRAIES_DIR}/
+	${PROJECT_LIBRAIES_DIR}/glm
 )
 
 target_link_libraries("App" PUBLIC 
@@ -31,4 +32,5 @@ target_link_libraries("App" PUBLIC
 	GLContext
 	InputSystem
 	glad
+	glm
 )
