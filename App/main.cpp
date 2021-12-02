@@ -67,6 +67,8 @@ int main() {
 
 	glUseProgram(shaderProgram);
 	while (!pInputSystem->window->shouldClose()) {
+		pGameTimer->nextFrame();
+
 		pInputSystem->beginTick(pGameTimer);
 		glClearColor(0.88f, 1.0f, 1.0f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);

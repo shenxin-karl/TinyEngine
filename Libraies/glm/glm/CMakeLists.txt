@@ -42,7 +42,39 @@ source_group("SIMD Files" FILES ${SIMD_SOURCE})
 source_group("SIMD Files" FILES ${SIMD_INLINE})
 source_group("SIMD Files" FILES ${SIMD_HEADER})
 
-add_library(glm INTERFACE)
+set(AllFile 
+	${CORE_SOURCE}
+	${CORE_INLINE}
+	${CORE_HEADER}
+	${EXT_SOURCE}
+	${EXT_INLINE}
+	${EXT_HEADER}
+	${GTC_SOURCE}
+	${GTC_INLINE}
+	${GTC_HEADER}
+	${GTX_SOURCE}
+	${GTX_INLINE}
+	${GTX_HEADER}
+	${SIMD_SOURCE}
+	${SIMD_INLINE}
+	${SIMD_HEADER}
+)
+
+foreach(fileItem ${AllFile})       
+	# Get the directory of the source file
+	get_filename_component(PARENT_DIR "${fileItem}" DIRECTORY)
+	# Remove common directory prefix to make the group
+	string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" GROUP "${PARENT_DIR}")
+	# Make sure we are using windows slashes
+	string(REPLACE "/" "\\" GROUP "${GROUP}")
+	string(REPLACE "." "" GROUP "${GROUP}")
+	# Group into "Source Files" and "Header Files"
+	set(GROUP "${GROUP}")
+	source_group("${GROUP}" FILES "${fileItem}")
+endforeach()
+
+
+add_library(glm INTERFACE ${AllFile})
 set_target_properties("glm" PROPERTIES FOLDER "Libraies")
 target_include_directories(glm INTERFACE ../)
 

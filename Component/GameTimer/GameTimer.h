@@ -10,7 +10,7 @@ public:
 	void reset();
 	void start();
 	void stop();
-	void tick();
+	void nextFrame();
 	float totalTime() const;
 	float deltaTime() const;
 	std::uint32_t FPS() const;
