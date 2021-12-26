@@ -1,5 +1,5 @@
 #pragma once
-#include "IDevice.h"
+#include "IBindable.h"
 
 namespace re {
 
@@ -19,10 +19,8 @@ struct ClearValueDesc {
 };
 
 
-class IPassResource : public IObject {
+class IPassResource : public IBindable {
 public:
-	virtual void bind() const = 0;
-	virtual void unbind() const = 0;
 	virtual void clear(const ClearValueDesc &desc) const = 0;
 };
 

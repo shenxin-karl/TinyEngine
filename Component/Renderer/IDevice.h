@@ -19,8 +19,8 @@ class IGPUIndexBuffer;
 class IGPUVertexBuffer;
 class IInputLayout;
 class IFrameQueue;
-enum Topology;
-enum DxgiFormat;
+enum class Topology;
+enum class DxgiFormat;
 
 using uint64 = std::uint64_t;
 using uint32 = std::uint32_t;
