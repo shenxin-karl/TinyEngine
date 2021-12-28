@@ -1,7 +1,7 @@
 #pragma once
 #include "IBindable.h"
 
-namespace re {
+namespace rg {
 
 enum class PassResourceType {
 	PRT_RenderTarget,
@@ -22,6 +22,7 @@ struct ClearValueDesc {
 class IPassResource : public IBindable {
 public:
 	virtual void clear(const ClearValueDesc &desc) const = 0;
+	virtual ClearValueDesc getClearValueDesc() const = 0;
 };
 
 }

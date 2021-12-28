@@ -3,12 +3,12 @@
 #include <cstddef>
 #include "IAllocator.h"
 
-namespace re {
+namespace rg {
 
 class IFrameFence;
 class IPassRenderable;
 class IFrameResource;
-class IGraphPass;
+class IGraphicsPass;
 class IPassConstantBuffer;
 class IDrawable;
 class IShaderProgram;
@@ -19,11 +19,14 @@ class IGPUIndexBuffer;
 class IGPUVertexBuffer;
 class IInputLayout;
 class IFrameQueue;
+class ISamplerResource;
 enum class Topology;
 enum class DxgiFormat;
 
 using uint64 = std::uint64_t;
 using uint32 = std::uint32_t;
+using uint16 = std::uint16_t;
+using uint8  = std::uint8_t;
 
 struct IndexBufferDesc {
 	void *pData = nullptr;
@@ -69,15 +72,23 @@ using REWeakPtr = std::weak_ptr<T>;
 
 class IDevice : public IObject {
 public:
-	static IDevice *instance();
-
-	virtual void initialize() = 0;
-	virtual void getFrameResourceSize() const = 0;
 	virtual RESharePtr<IFrameQueue> getFrameQueue() const = 0;
 	virtual REUniquePtr<IGPUIndexBuffer> createIndexBuffer(const IndexBufferDesc &desc) const = 0;
 	virtual REUniquePtr<IGPUVertexBuffer> createVertexBuffer(const VertexBufferDesc &desc) const = 0;
 	virtual REUniquePtr<IInputLayout> createInputLayout(const InputLayoutDesc &desc) const = 0;
 	virtual ~IDevice() = default;
+public:	// option
+	virtual void enableTheDebugLayer() = 0;
+	virtual bool isEnableTheDebugLayer() const = 0;
+	virtual void getFrameResourceSize() const = 0;
+	virtual int getSwapChainBufferCount() const = 0;
+	virtual bool get4xMsaaState() const = 0;
+	virtual void set4xMsaaState(bool flag) = 0;
+public:	// event
+	virtual void onResize(int width, int height) = 0;
+public:	// static member function
+	static IDevice *instance();
+	
 private:
 
 	virtual IAllocator *getAllocator() const = 0;

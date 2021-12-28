@@ -3,7 +3,7 @@
 #include <memory>
 #include "IObject.h"
 
-namespace re {
+namespace rg {
 
 class IAllocator : IObject {
 public:

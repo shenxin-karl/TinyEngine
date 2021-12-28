@@ -4,9 +4,9 @@
 #include <string>
 
 
-namespace re {
+namespace rg {
 
-struct GraphPassDesc {
+struct GraphicsPassDesc {
 	PassResourceType type;
 	DxgiFormat format;
 	union {
@@ -16,17 +16,17 @@ struct GraphPassDesc {
 	};
 };
 
-class IGraphPass : public IObject {
+class IGraphicsPass : public IObject {
 public:
 	virtual std::string getName() const = 0;
 	virtual void source(PassResourceType type, const std::string &name) = 0;
-	virtual void sink(const GraphPassDesc &desc, const std::string &name) = 0;
+	virtual void sink(const GraphicsPassDesc &desc, const std::string &name) = 0;
 	virtual REUniquePtr<IPassRenderable> createRenderable() const = 0;
 	virtual RESharePtr<IConstantBuffer> getPassConstantBuffer() const = 0;
 	virtual REWeakPtr<IPassResource> getSink(PassResourceType type, const std::string &name) const = 0;
 	virtual bool isFinished() const = 0;
 	virtual bool isRunning() const = 0;
-	virtual ~IGraphPass() = default;
+	virtual ~IGraphicsPass() = default;
 };
 
 }

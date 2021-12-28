@@ -23,6 +23,7 @@ set_target_properties("Renderer" PROPERTIES FOLDER "Component")
 
 target_include_directories(Renderer PUBLIC 
 	${PROJECT_COMPONENT_DIR}/
+	${CMAKE_CURRENT_SOURCE_DIR}/
 )
 
 target_link_libraries(Renderer PUBLIC 
