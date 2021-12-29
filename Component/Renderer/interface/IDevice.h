@@ -62,25 +62,34 @@ struct ScissorRect {
 };
 
 template<typename T>
-using RESharePtr = std::shared_ptr<T>;
+using RGSharePtr = std::shared_ptr<T>;
 
 template<typename T>
-using REUniquePtr = std::unique_ptr<T>;
+using RGUniquePtr = std::unique_ptr<T>;
 
 template<typename T>
-using REWeakPtr = std::weak_ptr<T>;
+using RGWeakPtr = std::weak_ptr<T>;
+
+struct DeviceDesc {
+	int width;
+	int height;
+	bool enableDebugLayer;
+	union {
+		void *hwnd;		// window hwnd
+	};
+};
 
 class IDevice : public IObject {
 public:
-	virtual RESharePtr<IFrameQueue> getFrameQueue() const = 0;
+	virtual void initialize(const DeviceDesc &desc) = 0;
+	virtual RGSharePtr<IFrameQueue> getFrameQueue() const = 0;
 	virtual REUniquePtr<IGPUIndexBuffer> createIndexBuffer(const IndexBufferDesc &desc) const = 0;
 	virtual REUniquePtr<IGPUVertexBuffer> createVertexBuffer(const VertexBufferDesc &desc) const = 0;
 	virtual REUniquePtr<IInputLayout> createInputLayout(const InputLayoutDesc &desc) const = 0;
 	virtual ~IDevice() = default;
 public:	// option
-	virtual void enableTheDebugLayer() = 0;
-	virtual bool isEnableTheDebugLayer() const = 0;
-	virtual void getFrameResourceSize() const = 0;
+	virtual bool getDebugLayerState() const = 0;
+	virtual bool setDebugLayerState(bool flag) = 0;
 	virtual int getSwapChainBufferCount() const = 0;
 	virtual bool get4xMsaaState() const = 0;
 	virtual void set4xMsaaState(bool flag) = 0;
@@ -105,7 +114,7 @@ private:
 };
 
 template<typename T, typename... Args>
-RESharePtr<T> MakeShared(Args&&... args) {
+RGSharePtr<T> MakeShared(Args&&... args) {
 	return std::allocate_shared<T>(*IDevice::instance()->getAllocator());
 }
 

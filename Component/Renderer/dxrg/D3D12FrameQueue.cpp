@@ -11,28 +11,34 @@ void D3D12FrameQueue::initialize(ID3D12Device *pDevice) {
 		_frameQueue[i] = MakeShared<D3D12FrameResource>();
 }
 
-RESharePtr<IFrameResource> D3D12FrameQueue::getCurrentFrameResource() const {
-	return std::dynamic_pointer_cast<IFrameResource>(
+RGSharePtr<IFrameResource> D3D12FrameQueue::getCurrentFrameResource() const {
+	return std::static_pointer_cast<IFrameResource>(
 		_frameQueue[_currentFrameResourceIndex]
 	);
 }
 
-RESharePtr<IFrameFence> D3D12FrameQueue::getFrameFence() const {
+RGSharePtr<IFrameFence> D3D12FrameQueue::getFrameFence() const {
 	return _pFrameFence;
 }
 
-void D3D12FrameQueue::beginFrame() {
+void D3D12FrameQueue::waitForAllFrameResource() {
+	for (auto &pFrameResource : _frameQueue)
+		_pFrameFence->waitForCompletion(pFrameResource->getFenceValue());
+	_currentFrameResourceIndex = 0;
+}
 
+void D3D12FrameQueue::beginFrame() {
+	auto fence = getCurrentFrameResource()->getFenceValue();
+	_pFrameFence->waitForCompletion(fence);
 }
 
 void D3D12FrameQueue::endFrame() {
-	_frameQueue[_currentFrameResourceIndex]->addFenceValue();
+	getCurrentFrameResource()->setFenceValue(_pFrameFence->incrementFenceValue());
 	_currentFrameResourceIndex = (_currentFrameResourceIndex + 1) % D3D12Device::kSwapChainBufferCount;
 }
 
 D3D12FrameQueue::~D3D12FrameQueue() {
-	for (auto &pFrameResource : _frameQueue)
-		_pFrameFence->waitForCompletion(pFrameResource->getFenceValue());
+	waitForAllFrameResource();
 }
 
 }

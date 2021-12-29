@@ -18,4 +18,19 @@ inline void ThrowIfFailed(HRESULT hr) {
 		throw std::exception("error");
 }
 
+#define USE_FUNCTION_GET_RIGHT_VALUE_PTR
+template<typename T>
+inline const T *_getRightValuePtr(const T &v) noexcept {
+	return &v;
+}
+
+template<typename T>
+inline auto RVPtr(T &&v) {
+#ifdef USE_FUNCTION_GET_RIGHT_VALUE_PTR 
+	return _getRightValuePtr(v);
+#else
+	return &v;
+#endif
+}
+
 }

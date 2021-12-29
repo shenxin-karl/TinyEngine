@@ -14,12 +14,22 @@ uint64 D3D12Fence::getCompletedValue() const {
 	return _pFence->GetCompletedValue();
 }
 
+uint64 D3D12Fence::getCurrentFenceValue() const {
+	return _fenceValue;
+}
+
+uint64 D3D12Fence::incrementFenceValue() {
+	return ++_fenceValue;
+}
+
 void D3D12Fence::waitForCompletion(uint32 fence) const {
 	if (fence != 0 && getCompletedValue() < fence) {
 		HANDLE event = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
-		ThrowIfFailed(_pFence->SetEventOnCompletion(fence, event));
-		WaitForSingleObject(event, INFINITE);
-		CloseHandle(event);
+		if (event != nullptr) {
+			ThrowIfFailed(_pFence->SetEventOnCompletion(fence, event));
+			WaitForSingleObject(event, INFINITE);
+			CloseHandle(event);
+		}
 	}
 }
 
