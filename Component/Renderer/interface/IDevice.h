@@ -83,9 +83,9 @@ class IDevice : public IObject {
 public:
 	virtual void initialize(const DeviceDesc &desc) = 0;
 	virtual RGSharePtr<IFrameQueue> getFrameQueue() const = 0;
-	virtual REUniquePtr<IGPUIndexBuffer> createIndexBuffer(const IndexBufferDesc &desc) const = 0;
-	virtual REUniquePtr<IGPUVertexBuffer> createVertexBuffer(const VertexBufferDesc &desc) const = 0;
-	virtual REUniquePtr<IInputLayout> createInputLayout(const InputLayoutDesc &desc) const = 0;
+	virtual RGUniquePtr<IGPUIndexBuffer> createIndexBuffer(const IndexBufferDesc &desc) const = 0;
+	virtual RGUniquePtr<IGPUVertexBuffer> createVertexBuffer(const VertexBufferDesc &desc) const = 0;
+	virtual RGUniquePtr<IInputLayout> createInputLayout(const InputLayoutDesc &desc) const = 0;
 	virtual ~IDevice() = default;
 public:	// option
 	virtual bool getDebugLayerState() const = 0;
@@ -119,10 +119,10 @@ RGSharePtr<T> MakeShared(Args&&... args) {
 }
 
 template<typename T, typename... Args>
-REUniquePtr<T> MakeUnique(Args&&... args) {
+RGUniquePtr<T> MakeUnique(Args&&... args) {
 	auto *ptr = IDevice::instance()->allocate(1);
 	new(ptr) T(std::forward<Args>(args)...);
-	return REUniquePtr<T>(ptr);
+	return RGUniquePtr<T>(ptr);
 }
 
 }
