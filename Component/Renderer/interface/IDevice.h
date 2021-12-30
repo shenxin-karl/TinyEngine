@@ -113,16 +113,4 @@ private:
 	}
 };
 
-template<typename T, typename... Args>
-RGSharePtr<T> MakeShared(Args&&... args) {
-	return std::allocate_shared<T>(*IDevice::instance()->getAllocator());
-}
-
-template<typename T, typename... Args>
-RGUniquePtr<T> MakeUnique(Args&&... args) {
-	auto *ptr = IDevice::instance()->allocate(1);
-	new(ptr) T(std::forward<Args>(args)...);
-	return RGUniquePtr<T>(ptr);
-}
-
 }

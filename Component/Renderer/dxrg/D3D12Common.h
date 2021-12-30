@@ -1,4 +1,5 @@
 #pragma once
+#include "IAllocator.h"
 #include <windows.h>
 #include <exception>
 #include <d3d12.h>
