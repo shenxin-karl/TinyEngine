@@ -61,15 +61,6 @@ struct ScissorRect {
 	float maxDepth;
 };
 
-template<typename T>
-using RGSharePtr = std::shared_ptr<T>;
-
-template<typename T>
-using RGUniquePtr = std::unique_ptr<T>;
-
-template<typename T>
-using RGWeakPtr = std::weak_ptr<T>;
-
 struct DeviceDesc {
 	int width;
 	int height;
@@ -113,16 +104,6 @@ private:
 	}
 };
 
-template<typename T, typename... Args>
-RGSharePtr<T> MakeShared(Args&&... args) {
-	return std::allocate_shared<T>(*IDevice::instance()->getAllocator());
-}
 
-template<typename T, typename... Args>
-RGUniquePtr<T> MakeUnique(Args&&... args) {
-	auto *ptr = IDevice::instance()->allocate(1);
-	new(ptr) T(std::forward<Args>(args)...);
-	return RGUniquePtr<T>(ptr);
-}
 
 }
