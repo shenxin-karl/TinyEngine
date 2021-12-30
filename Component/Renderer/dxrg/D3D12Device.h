@@ -1,3 +1,4 @@
+#pragma once
 #include "interface/IDevice.h"
 #include "D3D12Common.h"
 
@@ -23,6 +24,7 @@ public:
 	virtual void onResize(int width, int height) override;
 public:
 	constexpr uint32 static kSwapChainBufferCount = 2;
+	static D3D12Device *instance() noexcept;
 private:
 	void createCommandObjects();
 	void createSwapChain();

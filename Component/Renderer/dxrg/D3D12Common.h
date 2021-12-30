@@ -1,10 +1,10 @@
 #pragma once
-#include "IAllocator.h"
 #include <windows.h>
 #include <exception>
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <wrl.h>
+#include "interface/RendererAllocator.h"
 #undef  min
 #undef  max
 

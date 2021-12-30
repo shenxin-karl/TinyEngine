@@ -1,7 +1,8 @@
 #pragma once
 #include <memory>
 #include <cstddef>
-#include "IAllocator.h"
+#include "interface/RendererAllocator.h"
+#include "IObject.h"
 
 namespace rg {
 
@@ -29,12 +30,12 @@ using uint16 = std::uint16_t;
 using uint8  = std::uint8_t;
 
 struct IndexBufferDesc {
-	void *pData = nullptr;
+	const void *pData = nullptr;
 	uint64 size = 0;
 };
 
 struct VertexBufferDesc {
-	void *pData = nullptr;
+	const void *pData = nullptr;
 	uint64 size = 0;
 };
 
@@ -70,6 +71,7 @@ struct DeviceDesc {
 	};
 };
 
+
 class IDevice : public IObject {
 public:
 	virtual void initialize(const DeviceDesc &desc) = 0;
@@ -86,27 +88,11 @@ public:	// option
 	virtual void set4xMsaaState(bool flag) = 0;
 public:	// event
 	virtual void onResize(int width, int height) = 0;
-public:	// static member function
-	static IDevice *instance();
-	
+public:
+	static IDevice *instance() noexcept;
+	static void D3DInitialize();
 private:
-
-	virtual IAllocator *getAllocator() const = 0;
-
-	template<typename T>
-	T *allocate(std::size_t n) {
-		return static_cast<T *>(getAllocator()->allocate(n));
-	}
-
-	template<typename T>
-	void deallocate(T *ptr, size_t n) {
-		getAllocator()->deallcate(ptr, n);
-	}
+	static inline RGUniquePtr<IDevice> _pDevice;
 };
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> d2bdb4030f263d4214f9090fb72785a3e5f214fe
 }

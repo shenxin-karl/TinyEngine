@@ -110,6 +110,10 @@ void D3D12Device::onResize(int width, int height) {
 	}
 }
 
+D3D12Device *D3D12Device::instance() noexcept {
+	return static_cast<D3D12Device *>(IDevice::instance());
+}
+
 void D3D12Device::createCommandObjects() {
 	D3D12_COMMAND_QUEUE_DESC queueDesc;
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;

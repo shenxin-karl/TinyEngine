@@ -1,4 +1,5 @@
 #include "UploadBuffer.h"
+#include "D3D12Device.h"
 
 namespace dxrg {
 
@@ -8,7 +9,7 @@ std::shared_ptr<dxrg::UploadBuffer::Page> UploadBuffer::requestPage() {
 		page = _availablePage.front();
 		_availablePage.pop_front();
 	} else {
-		page = std::make_shared<Page>();
+		page = std::make_shared<Page>(_pageSize);
 		_pagePool.push_back(page);
 	}
 	return page;
@@ -35,6 +36,13 @@ void UploadBuffer::reset() {
 	_availablePage = _pagePool;
 	for (auto &page : _availablePage)
 		page->reset();
+}
+
+
+UploadBuffer::Page::Page(size_t pageSize) 
+: _pageSize(pageSize), _pGPU(0), _pCPU(nullptr), _offset(0) 
+{
+	//D3D12Device::instance()->
 }
 
 }

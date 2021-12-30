@@ -6,6 +6,7 @@ LIST(APPEND ComponentAllSubDir "GameTimer")
 LIST(APPEND ComponentAllSubDir "InputSystem")
 LIST(APPEND ComponentAllSubDir "GLContext")
 LIST(APPEND ComponentAllSubDir "Renderer")
+LIST(APPEND ComponentAllSubDir "Allocator")
 
 set(PROJECT_COMPONENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(AllTestDir "")

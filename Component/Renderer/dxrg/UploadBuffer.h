@@ -16,7 +16,7 @@ public:
 	size_t getPageSize() const noexcept;
 	Allocation allocate(size_t sizeInBytes, size_t alignment);
 	void reset();
-	~UploadBuffer();
+	~UploadBuffer() = default;
 private:
 	std::shared_ptr<Page> _currentPage;
 	PagePool			  _pagePool;			
@@ -30,7 +30,7 @@ struct UploadBuffer::Allocation {
 };
 
 struct UploadBuffer::Page {
-	explicit Page(size_t sizeInBytes);
+	explicit Page(size_t pageSize);
 	bool hasSpace(size_t sizeInBytes, size_t alignment) const;
 	Allocation allocate(size_t sizeInBytes, size_t alignment);
 	void reset();

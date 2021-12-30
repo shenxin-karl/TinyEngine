@@ -22,7 +22,7 @@ uint64 D3D12Fence::incrementFenceValue() {
 	return ++_fenceValue;
 }
 
-void D3D12Fence::waitForCompletion(uint32 fence) const {
+void D3D12Fence::waitForCompletion(uint64 fence) const {
 	if (fence != 0 && getCompletedValue() < fence) {
 		HANDLE event = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
 		if (event != nullptr) {
