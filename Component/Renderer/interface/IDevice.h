@@ -61,15 +61,6 @@ struct ScissorRect {
 	float maxDepth;
 };
 
-template<typename T>
-using RGSharePtr = std::shared_ptr<T>;
-
-template<typename T>
-using RGUniquePtr = std::unique_ptr<T>;
-
-template<typename T>
-using RGWeakPtr = std::weak_ptr<T>;
-
 struct DeviceDesc {
 	int width;
 	int height;
@@ -113,4 +104,9 @@ private:
 	}
 };
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> d2bdb4030f263d4214f9090fb72785a3e5f214fe
 }
