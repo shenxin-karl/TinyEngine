@@ -1,48 +1,60 @@
 #include "UploadBuffer.h"
 #include "D3D12Device.h"
+#include <cassert>
 
 namespace dxrg {
 
-std::shared_ptr<dxrg::UploadBuffer::Page> UploadBuffer::requestPage() {
-	std::shared_ptr<Page> page;
-	if (!_availablePage.empty()) {
-		page = _availablePage.front();
-		_availablePage.pop_front();
-	} else {
-		page = std::make_shared<Page>(_pageSize);
-		_pagePool.push_back(page);
-	}
-	return page;
+UploadBuffer::UploadBuffer(const void *pData, uint64 size, bool isConstantBuffer) {
+	_size = size;
+	if (isConstantBuffer)
+		_size = alignmentUp256(size);
+
+	auto *pDevice = D3D12Device::instance()->getD3DDevice();
+	ThrowIfFailed(pDevice->CreateCommittedResource(
+		RVPtr(CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD)),
+		D3D12_HEAP_FLAG_NONE,
+		RVPtr(CD3DX12_RESOURCE_DESC::Buffer(_size)),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&_pUploadBuffer)
+	));
+	_pUploadBuffer->Map(0, nullptr, &_pCPU);
+	copyData(pData, size);
 }
 
-UploadBuffer::UploadBuffer(size_t pageSize /*= kDefaultPageSize*/) : _pageSize(pageSize) {
-}
-
-size_t UploadBuffer::getPageSize() const noexcept {
-	return _pageSize;
-}
-
-UploadBuffer::Allocation UploadBuffer::allocate(size_t sizeInBytes, size_t alignment) {
-	if (sizeInBytes > _pageSize)
-		throw std::bad_alloc();
-
-	if (_currentPage == nullptr || !_currentPage->hasSpace(sizeInBytes, alignment))
-		_currentPage = requestPage();
-	return _currentPage->allocate(sizeInBytes, alignment);
-}
-
-void UploadBuffer::reset() {
-	_currentPage = nullptr;
-	_availablePage = _pagePool;
-	for (auto &page : _availablePage)
-		page->reset();
-}
-
-
-UploadBuffer::Page::Page(size_t pageSize) 
-: _pageSize(pageSize), _pGPU(0), _pCPU(nullptr), _offset(0) 
+UploadBuffer::UploadBuffer(UploadBuffer &&other) noexcept
+: _pCPU(other._pCPU), _size(other._size), _pUploadBuffer(other._pUploadBuffer) 
 {
-	//D3D12Device::instance()->
+	other._pCPU = nullptr;
+	other._size = 0;
+	other._pUploadBuffer = nullptr;
 }
+
+uint64 UploadBuffer::getSize() const noexcept {
+	return _size;
+}
+
+void UploadBuffer::copyData(const void *pData, uint64 size) {
+	assert(size <= _size);
+	memcpy(_pCPU, pData, size);
+}
+
+auto UploadBuffer::getGPUAddress() const noexcept {
+	return _pUploadBuffer->GetGPUVirtualAddress();
+}
+
+UploadBuffer::~UploadBuffer() {
+	_pUploadBuffer->Unmap(0, nullptr);
+	_pCPU = nullptr;
+	_size = 0;
+}
+
+void swap(UploadBuffer &lhs, UploadBuffer &rhs) noexcept {
+	using std::swap;
+	swap(lhs._pCPU, rhs._pCPU);
+	swap(lhs._size, rhs._size);
+	swap(lhs._pUploadBuffer, rhs._pUploadBuffer);
+}
+
 
 }

@@ -59,6 +59,18 @@ rg::RGSharePtr<rg::IFrameQueue> D3D12Device::getFrameQueue() const {
 	return std::static_pointer_cast<IFrameQueue>(_pFrameQueue);
 }
 
+RGUniquePtr<IGPUIndexBuffer> D3D12Device::createIndexBuffer(const IndexBufferDesc &desc) const {
+
+}
+
+RGUniquePtr<IGPUVertexBuffer> D3D12Device::createVertexBuffer(const VertexBufferDesc &desc) const {
+
+}
+
+RGUniquePtr<IInputLayout> D3D12Device::createInputLayout(const InputLayoutDesc &desc) const {
+
+}
+
 bool D3D12Device::getDebugLayerState() const {
 	return _enableDebugLayer;
 }
@@ -108,6 +120,10 @@ void D3D12Device::onResize(int width, int height) {
 		_pDevice->CreateRenderTargetView(_pSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
 		rtvHeapHandle.Offset(1, _rtvDescriptorSize);
 	}
+}
+
+ID3D12Device *D3D12Device::getD3DDevice() const {
+	return _pDevice.Get();
 }
 
 D3D12Device *D3D12Device::instance() noexcept {

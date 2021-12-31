@@ -22,6 +22,7 @@ public:
 	virtual bool get4xMsaaState() const override;
 	virtual void set4xMsaaState(bool flag) override;
 	virtual void onResize(int width, int height) override;
+	ID3D12Device *getD3DDevice() const;
 public:
 	constexpr uint32 static kSwapChainBufferCount = 2;
 	static D3D12Device *instance() noexcept;

@@ -6,8 +6,8 @@ namespace rg {
 
 class IBindable : public IObject {
 public:
-	virtual void bind(RESharePtr<IGraphicsPass> pGraphPass) const = 0;
-	virtual void unbind(RESharePtr<IGraphicsPass> pGraphPass) const = 0;
+	virtual void bind(RGSharePtr<IGraphicsPass> pGraphPass) const = 0;
+	virtual void unbind(RGSharePtr<IGraphicsPass> pGraphPass) const = 0;
 };
 
 }

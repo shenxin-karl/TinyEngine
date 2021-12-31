@@ -4,6 +4,7 @@
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <wrl.h>
+#include "D3Dx12.h"
 #include "interface/RendererAllocator.h"
 #undef  min
 #undef  max
@@ -32,6 +33,11 @@ inline auto RVPtr(T &&v) {
 #else
 	return &v;
 #endif
+}
+
+inline size_t alignmentUp256(size_t size) {
+	constexpr size_t mask = ~0xff;
+	return (size + 255) & mask;
 }
 
 }
