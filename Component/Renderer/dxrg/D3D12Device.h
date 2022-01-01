@@ -23,6 +23,7 @@ public:
 	virtual void set4xMsaaState(bool flag) override;
 	virtual void onResize(int width, int height) override;
 	ID3D12Device *getD3DDevice() const;
+	uint32 GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE type) const noexcept;
 public:
 	constexpr uint32 static kSwapChainBufferCount = 2;
 	static D3D12Device *instance() noexcept;

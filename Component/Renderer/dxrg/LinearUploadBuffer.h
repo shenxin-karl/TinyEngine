@@ -6,10 +6,10 @@
 namespace dxrg {
 
 class LinearUploadBuffer {
-	struct Allocation;
 	struct Page;
 	using PagePool = std::deque<RGSharePtr<Page>>;
 public:
+	struct Allocation;
 	constexpr static size_t kDefaultPageSize = 1024 * 1024 * 2;
 	explicit LinearUploadBuffer(size_t pageSize = kDefaultPageSize);
 	size_t getPageSize() const noexcept;

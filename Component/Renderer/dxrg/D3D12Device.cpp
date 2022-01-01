@@ -126,6 +126,19 @@ ID3D12Device *D3D12Device::getD3DDevice() const {
 	return _pDevice.Get();
 }
 
+uint32 D3D12Device::GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE type) const noexcept {
+	switch (type) {
+	case D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV:
+		return _cbvSrvUavDescriptorSize;
+	case D3D12_DESCRIPTOR_HEAP_TYPE_RTV:
+		return _rtvDescriptorSize;
+	case D3D12_DESCRIPTOR_HEAP_TYPE_DSV:
+		return _dsvDescriptorSize;
+	default:
+		return _pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES);
+	}
+}
+
 D3D12Device *D3D12Device::instance() noexcept {
 	return static_cast<D3D12Device *>(IDevice::instance());
 }

@@ -6,6 +6,7 @@
 #include <wrl.h>
 #include "D3Dx12.h"
 #include "interface/RendererAllocator.h"
+#include "interface/InterfaceCommon.h"
 #undef  min
 #undef  max
 
