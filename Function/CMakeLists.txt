@@ -4,6 +4,7 @@ option(GROUP_BY_EXPLORER ON)
 
 LIST(APPEND ComponentAllSubDir "Function")
 LIST(APPEND ComponentAllSubDir "Math")
+LIST(APPEND ComponentAllSubDir "ShaderParse")
 
 if (MSVC)
 	add_definitions(-D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)	## enable wstring_convert
