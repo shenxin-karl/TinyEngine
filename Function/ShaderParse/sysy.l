@@ -11,7 +11,7 @@
 // 所以需要 include Bison 生成的头文件
 #include "sysy.tab.hpp"
 
-using namespace std;
+using namespace std;        
 
 %}
 
@@ -29,8 +29,8 @@ Hexadecimal   0[xX][0-9a-fA-F]+
 
 %%
 
-{WhiteSpace}    { /* 忽略, 不做任何操作 */ }
-{LineComment}   { /* 忽略, 不做任何操作 */ }
+{WhiteSpace}    { /* Nothing to do */ }
+{LineComment}   { /* Nothing to do */ }
 
 "int"           { return INT; }
 "return"        { return RETURN; }

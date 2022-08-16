@@ -4,33 +4,37 @@ project(ShaderParse)
 # 开启多线程编译 和 使用 c++latest 版本
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /std:c++latest")
 
-file(GLOB_RECURSE L_SOURCES ParseCode/*.l)
-file(GLOB_RECURSE Y_SOURCES ParseCode/*.y)
+file(GLOB_RECURSE L_SOURCES *.l)
+file(GLOB_RECURSE Y_SOURCES *.y)
 
 message("L_SOURCES: ${L_SOURCES}")
 message("L_SOURCES: ${Y_SOURCES}")
 
-
-
-
-add_custom_command(TARGET ParseCode/y.tab.c y.tab.h
-                   PRE_BUILD
-                   COMMAND ./Tool/win_flex.exe --wincompat ${L_SOURCES}
+set(FLEX_OUPUT "${CMAKE_CURRENT_SOURCE_DIR}/ParseCode/lex.yy.cpp")
+add_custom_command(OUTPUT ${FLEX_OUPUT}
+				   PRE_BUILD
+                   COMMAND ${PROJECT_DIR}/Tool/win_flex_bison/win_flex.exe -o ${FLEX_OUPUT} --wincompat ${L_SOURCES} 
 				   MAIN_DEPENDENCY ${L_SOURCES}
-                   COMMENT "Generate Function ShaderParse"
+                   COMMENT "Generate ${FLEX_OUPUT}"
 )
 
-add_custom_command(OUTPUT ParseCode/lex.yy.c
-                   PRE_BUILD
-                   COMMAND ./Tool/win_bison.exe -d -v -b y ${Y_SOURCES}
+set(BISON_OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/ParseCode/sysy.tab.cpp")
+add_custom_command(OUTPUT ${BISON_OUTPUT}
+				   PRE_BUILD
+                   COMMAND ${PROJECT_DIR}/Tool/win_flex_bison/win_bison.exe -d -v -b y ${Y_SOURCES}  -o ${BISON_OUTPUT}
 				   MAIN_DEPENDENCY ${Y_SOURCES}
-                   COMMENT "Generate Function ShaderParse"
+                   COMMENT "Generate ${BISON_OUTPUT}"
 )
+
+add_compile_options(/wd4005)
+add_compile_options(/wd4819)
+add_compile_options(/wd4065)
+
 
 file(GLOB_RECURSE SOURCE_FILES *.cpp *.c)
 file(GLOB_RECURSE HEADER_FILES *.hpp *.h *.ini)
-set(CppFile ${SOURCE_FILES} ${HEADER_FILES})
-set(AllFile ${CppFile} ${L_SOURCES} ${Y_SOURCES})
+set(CppFile ${SOURCE_FILES} ${HEADER_FILES} ${FLEX_OUPUT} ${BISON_OUTPUT})
+set(AllFile ${CppFile} ${L_SOURCES} ${Y_SOURCES} ${FLEX_OUPUT} ${BISON_OUTPUT})
 
 
 foreach(fileItem ${AllFile})       
@@ -50,6 +54,8 @@ set_property(SOURCE ${SHADER_FILES} PROPERTY VS_TOOL_OVERRIDE "yacc")	# 设置 y
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Function")
 
-
+target_include_directories(${PROJECT_NAME} PUBLIC 
+	${PROJECT_FUNCTION_DIR}/ShaderParse/ParseCode
+)
 
 
